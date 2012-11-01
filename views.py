@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-02 03:45
+# Last Change: 2012-11-02 04:43
 
 import json, datetime
 import random
@@ -15,6 +15,7 @@ from bottle import get, post, put, delete
 from bottle import view, request, response, abort
 
 from .db import db
+from .conf import DEBUG
 from .tools.paginator import Paginator
 from .tools.hash_tool import str2md5
 
@@ -22,7 +23,7 @@ from .tools.hash_tool import str2md5
 @view('index.tpl')
 def index():
     try:
-        tpl_dict = {}
+        tpl_dict = { 'debug': DEBUG }
 
         return tpl_dict
     except Exception as e:
