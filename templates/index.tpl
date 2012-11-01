@@ -45,47 +45,47 @@
             <!-- ko foreach: gates -->
             <div class="well gate-wrap" data-bind="fade: filterFlag">
               <div class="clearfix ib-wrap">
-                <div class="ib gate-label">
+                <div class="ib gate-label" title="Gate Label">
                   <span class="icon"><i class="icon-tag"></i></span>
                   <div class="reader editable" data-bind="text: label, click: edit"></div>
                   <div class="input-append editor">
                     <input type="text" data-bind="value: label.peek(), event: { keypress: editLabel }">
-                    <button type="button" class="btn" data-bind="click: editLabel"><i class="icon-edit"></i></button>
-                    <button type="button" class="btn" data-bind="click: resetLabel"><i class="icon-refresh"></i></button>
+                    <button type="button" class="btn" title="Edit" data-bind="click: editLabel"><i class="icon-edit"></i></button>
+                    <button type="button" class="btn" title="Reset" data-bind="click: resetLabel"><i class="icon-refresh"></i></button>
                   </div>
                 </div>
               </div>
               <div class="clearfix ib-wrap">
-                <div class="ib gate-counter">
+                <div class="ib gate-counter" title="Ping Counter">
                   <span class="icon"><i class="icon-map-marker"></i></span>
                   <div class="reader" data-bind="text: counter"></div>
                 </div>
-                <div class="ib gate-ip">
+                <div class="ib gate-ip" title="Latest IP">
                   <span class="icon"><i class="icon-globe"></i></span>
                   <div class="reader" data-bind="text: ip"></div>
                 </div>
               </div>
               <div class="clearfix ib-wrap">
-                <div class="ib gate-description">
+                <div class="ib gate-description" title="Description">
                   <span class="icon"><i class="icon-comment"></i></span>
                   <div class="reader editable" data-bind="text: description, click: edit"></div>
                   <div class="input-append editor">
                     <input type="text" data-bind="value: description.peek(), event: { keypress: editDescription }">
-                    <button type="button" class="btn" data-bind="click: editDescription"><i class="icon-edit"></i></button>
-                    <button type="button" class="btn" data-bind="click: resetDescription"><i class="icon-refresh"></i></button>
+                    <button type="button" class="btn" title="Edit" data-bind="click: editDescription"><i class="icon-edit"></i></button>
+                    <button type="button" class="btn" title="Reset" data-bind="click: resetDescription"><i class="icon-refresh"></i></button>
                   </div>
                 </div>
               </div>
               <div class="clearfix ib-wrap">
-                <div class="ib gate-token">
+                <div class="ib gate-token" title="Ping Token">
                   <span class="icon"><i class="icon-barcode"></i></span>
                   <div class="reader"><span class="text-info" data-bind="text: token"></span></div>
                 </div>
               </div>
               <div class="gate-action">
                 <div class="btn-group">
-                  <button type="button" class="btn" data-bind="click: $parent.reset"><i class="icon-repeat"></i></button>
-                  <button type="button" class="btn" data-bind="click: $parent.remove"><i class="icon-trash"></i></button>
+                  <button type="button" class="btn" title="Reset Token" data-bind="click: $parent.reset"><i class="icon-repeat"></i></button>
+                  <button type="button" class="btn" title="Delete Gate" data-bind="click: $parent.remove"><i class="icon-trash"></i></button>
                 </div>
               </div>
             </div>
