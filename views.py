@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-02 01:11
+# Last Change: 2012-11-02 03:45
 
 import json, datetime
 import random
@@ -43,7 +43,23 @@ def logout():
 @get('/ping')
 def ping():
     try:
-        token = request.query.get('token', type=string)
+        _token = request.query.get('token', type=str)
+        _ip = request.query.get('ip', type=str) or request.remote_addr
+
+        gate = db['teleport.gate'].find_one({ 'token': _token })
+
+        if not gate:
+            abort(400)
+
+        gate['counter'] += 1
+        gate['records'].pop()
+        gate['records'].insert(0, _ip)
+
+        _id = db['teleport.gate'].save(gate, safe=True)
+
+        response.content_type = 'application/json'
+        response.set_header('Cache-Control', 'no-cache')
+        return json.dumps({ 'status': 'OK', 'ip': _ip })
     except Exception as e:
         abort(500)
 
