@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-10-29 22:42
+# Last Change: 2012-10-30 17:13
 
 from pymongo import Connection
 from pymongo.errors import AutoReconnect
@@ -14,7 +14,7 @@ try:
         )
 
     db = conn[DB['NAME']]
-    db.authenticate(DB['USER'], DB['PASSWORD'])
+    # db.authenticate(DB['USER'], DB['PASSWORD'])
 except AutoReconnect as e:
     print '[WARNING] Connect to MongDB failed.'
     db = None
@@ -26,15 +26,16 @@ except Exception as e:
         # 'username': '',
         # 'email': '',
         # 'password': '',
-        # 'token': '',
     # }
 
 # gate = {
         # 'label': '',
         # 'description': '',
-        # 'record': [
-                # 'ip': '',
-                # 'date': '',
+        # 'token': '',
+        # 'records': [
+                # { 'ip': '', 'date': '' }
             # ],
+        # 'counter': 0,
         # 'user_id': '',
+        # 'date': '',
     # }
