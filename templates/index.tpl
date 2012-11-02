@@ -27,20 +27,28 @@
   <body>
     <header>
       <div class="container">
-        <h2>Porject Teleport <small>% curl teleport.codeb2cc.com/ping</small></h2>
+        <h2>Porject Teleport <small>trace your host IP</small></h2>
       </div>
     </header>
     <div class="container">
       <div class="row">
         <div class="span4">
-          <dl>
-            <dt>Username</dt>
-            <dd id="info-username">Nobody</dd>
-            <dt>Email</dt>
-            <dd id="info-email">nobody@example.com</dd>
-          </dl>
+          <div>
+            <dl>
+              <dt>Username</dt>
+              <dd id="info-username">Nobody</dd>
+              <dt>Email</dt>
+              <dd id="info-email">nobody@example.com</dd>
+              <dt>Last login</dt>
+              <dd id="info-ip">127.0.0.1</dd>
+              <dd id="info-date">2012/11/02 17:20:36</dd>
+            </dl>
+          </div>
         </div>
         <div class="span8">
+          <div>
+            <p>Usage: <code>% curl teleport.codeb2cc.com/ping?token=TOKEN [ &ip=IP ]</code></p>
+          </div>
           <div>
             <div class="clearfix ib-wrap gate-control">
               <div class="ib" id="control-add">
