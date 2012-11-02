@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-02 04:43
+# Last Change: 2012-11-03 00:30
 
 import json, datetime
 import random
@@ -53,8 +53,8 @@ def ping():
             abort(400)
 
         gate['counter'] += 1
-        gate['records'].pop()
-        gate['records'].insert(0, _ip)
+        len(gate['records']) > 5 and gate['records'].pop()
+        gate['records'].insert(0, { 'ip': _ip, 'date': datetime.datetime.now() })
 
         _id = db['teleport.gate'].save(gate, safe=True)
 
@@ -62,6 +62,7 @@ def ping():
         response.set_header('Cache-Control', 'no-cache')
         return json.dumps({ 'status': 'OK', 'ip': _ip })
     except Exception as e:
+        traceback.print_exc()
         abort(500)
 
 def _gate_parser(doc):
@@ -75,6 +76,9 @@ def _gate_parser(doc):
                     'counter': doc['counter'],
                     'date': str(doc['date']),
                 }
+
+        for record in res['records']:
+            record['date'] = str(record['date'])
 
         return res
     except Exception as e:
@@ -120,7 +124,7 @@ def post():
                 'label': _label,
                 'description': _description,
                 'token': _random_token(),
-                'records': ['0.0.0.0', ],
+                'records': [],
                 'counter': 0,
                 'user_id': None,
                 'date': datetime.datetime.now(),

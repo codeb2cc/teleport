@@ -17,20 +17,22 @@ $(function () {
     this.id = data.id
     this.label = ko.observable(data.label)
     this.description = ko.observable(data.description)
-    this.records = ko.observableArray(data.records)
     this.counter = ko.observable(data.counter)
     this.token = ko.observable(data.token)
+
+    $.each(data.records, function (index, record) {
+      record['date'] = new Date(record['date'])
+    })
+    this.records = ko.observableArray(data.records)
 
     this.filterFlag = ko.observable(true)
 
     this.ip = ko.computed(function () {
-      var lastRecord = this.records()[0]
+      if (this.records().length) {
+        return this.records()[0]['ip']
+      }
 
-      return lastRecord ? lastRecord : ''
-    }, this)
-
-    ko.computed(function (a, b, c) {
-      var t = this.filterFlag()
+      return ''
     }, this)
 
     this.edit = function (gate, event) {
@@ -99,7 +101,7 @@ $(function () {
         data: { label: newLabel },
         dataType: 'json',
         success: function (data, textStatus, jqXHR) {
-          that.gates.push(new Gate(data['data']))
+          that.gates.unshift(new Gate(data['data']))
           jqInput.val('')
         },
         error: function (jqXHR, textStatus, errorThrown) {}
