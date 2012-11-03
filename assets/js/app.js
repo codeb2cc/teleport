@@ -16,7 +16,6 @@ $(function () {
   function Gate(data) {
     this.id = data.id
     this.label = ko.observable(data.label)
-    this.description = ko.observable(data.description)
     this.counter = ko.observable(data.counter)
     this.token = ko.observable(data.token)
 
@@ -25,15 +24,28 @@ $(function () {
     })
     this.records = ko.observableArray(data.records)
 
-    this.filterFlag = ko.observable(true)
+    this.hidden = ko.observable(true)
 
     this.ip = ko.computed(function () {
-      if (this.records().length) {
-        return this.records()[0]['ip']
-      }
-
-      return ''
+      return this.records().length ? this.records()[0]['ip'] : ''
     }, this)
+
+    this.message = ko.computed(function () {
+      return this.records().length ? this.records()[0]['message'] : ''
+    }, this)
+
+    this.update = function (data) {
+      this.id = data.id
+      this.label(data.label)
+      this.counter(data.counter)
+      this.token(data.token)
+
+      this.records.removeAll()
+      for (var _i = 0; _i < data.records.length; _i++) {
+        data.records[_i]['date'] = new Date(data.records[_i]['date'])
+        this.records.push(data.records[_i])
+      }
+    }
 
     this.edit = function (gate, event) {
       var editor = $(event.target).next('.editor')
@@ -42,39 +54,10 @@ $(function () {
       editor.find('input').focus()
     }
 
-    this.editLabel = function (gate, event) {
-      if (event.type === 'keypress' && event.keyCode !== 13) {
-        return true
-      }
-
-      var editor = $(event.target).parents('.editor')
-
-      gate.label(editor.find('input').val())
-      editor.hide()
-    }
-
-    this.resetLabel = function (gate, event) {
+    this.reset = function (gate, event) {
       var editor = $(event.target).parents('.editor')
 
       editor.find('input').val(gate.label())
-      editor.hide()
-    }
-
-    this.editDescription = function (gate, event) {
-      if (event.type === 'keypress' && event.keyCode !== 13) {
-        return true
-      }
-
-      var editor = $(event.target).parents('.editor')
-
-      gate.description(editor.find('input').val())
-      editor.hide()
-    }
-
-    this.resetDescription = function (gate, event) {
-      var editor = $(event.target).parents('.editor')
-
-      editor.find('input').val(gate.description())
       editor.hide()
     }
 
@@ -84,7 +67,9 @@ $(function () {
     var that = this
 
     this.gates = ko.observableArray([])
+    this.activeGate = ko.observable()
 
+    // Topbar {
     this.add = function () {
       if (event.type === 'keypress' && event.keyCode !== 13) {
         return true
@@ -113,40 +98,54 @@ $(function () {
       var searchStr = jqInput.val()
 
       $.each(this.gates(), function (index, gate) {
-        gate.filterFlag((gate.label().search(searchStr) !== -1))
+        gate.hidden((gate.label().search(searchStr) !== -1))
       })
 
       return true
     }
 
-    this.put = function (gate) {
-      var _data = {
-        id: gate.id,
-        label: gate.label(),
-        description: gate.description()
+    // }
+
+    // Gate action {
+    this.edit = function (gate, event) {
+      if (event.type === 'keypress' && event.keyCode !== 13) {
+        return true
       }
 
-      if (!Boolean(_data.id)) { return false }
+      var editor = $(event.target).parents('.editor')
 
       $.ajax({
         url: '/put/',
         type: 'PUT',
-        data: _data,
+        data: { id: gate.id, label: editor.find('input').val() },
         dataType: 'json',
         success: function (data, textStatus, jqXHR) {
-          console.log('OK')
+          gate.update(data['data'])
+          editor.hide()
+        },
+        error: function (jqXHR, textStatus, errorThrown) {}
+      })
+    }
+
+    this.history = function (gate) {
+      that.activeGate(null).activeGate(gate)
+      $('#modal-history').modal('show')
+    }
+
+    this.reset = function (gate) {
+      $.ajax({
+        url: '/reset/',
+        type: 'POST',
+        data: { id: gate.id },
+        dataType: 'json',
+        success: function (data, textStatus, jqXHR) {
+          gate.update(data['data'])
         },
         error: function (jqXHR, textStatus, errorThrown) {}
       })
     }
 
     this.remove = function (gate) {
-      if (gate.id == null) {
-        that.gates.remove(gate)
-
-        return false
-      }
-
       $.ajax({
         url: '/delete/',
         type: 'DELETE',
@@ -159,16 +158,19 @@ $(function () {
       })
     }
 
+    // }
+
+    // Initial
     $.getJSON('/get/', function (data) {
       var mappedGates = $.map(data['data'], function (item) {
         return new Gate(item)
       })
 
       that.gates(mappedGates)
-
     })
 
   }
 
-  ko.applyBindings(new TeleportViewModel())
+  var APP = new TeleportViewModel()
+  ko.applyBindings(APP)
 })

@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-03 00:30
+# Last Change: 2012-11-03 20:13
 
 import json, datetime
 import random
@@ -46,6 +46,7 @@ def ping():
     try:
         _token = request.query.get('token', type=str)
         _ip = request.query.get('ip', type=str) or request.remote_addr
+        _message = request.query.get('message', type=str, default='')
 
         gate = db['teleport.gate'].find_one({ 'token': _token })
 
@@ -54,7 +55,11 @@ def ping():
 
         gate['counter'] += 1
         len(gate['records']) > 5 and gate['records'].pop()
-        gate['records'].insert(0, { 'ip': _ip, 'date': datetime.datetime.now() })
+        gate['records'].insert(0, {
+                'ip'     : _ip,
+                'message': _message,
+                'date'   : datetime.datetime.utcnow()
+            })
 
         _id = db['teleport.gate'].save(gate, safe=True)
 
@@ -68,17 +73,16 @@ def ping():
 def _gate_parser(doc):
     try:
         res = {
-                    'id': str(doc['_id']),
-                    'label': doc['label'],
-                    'description': doc['description'],
-                    'token': doc['token'],
-                    'records': doc['records'],
-                    'counter': doc['counter'],
-                    'date': str(doc['date']),
+                    'id'         : str(doc['_id']),
+                    'label'      : doc['label'],
+                    'token'      : doc['token'],
+                    'records'    : doc['records'],
+                    'counter'    : doc['counter'],
+                    'date'       : doc['date'].isoformat(),
                 }
 
         for record in res['records']:
-            record['date'] = str(record['date'])
+            record['date'] = record['date'].isoformat()
 
         return res
     except Exception as e:
@@ -86,7 +90,7 @@ def _gate_parser(doc):
         return None
 
 @get('/get/')
-def get():
+def api_fetch():
     try:
         _id = request.query.get('id')
 
@@ -115,14 +119,12 @@ def _random_token(length=32):
     return ''.join(_SYSR.choice(_CHARS) for i in xrange(length))
 
 @post('/post/')
-def post():
+def api_add():
     try:
         _label = request.forms['label']
-        _description = request.forms.get('description')
 
         gate = {
                 'label': _label,
-                'description': _description,
                 'token': _random_token(),
                 'records': [],
                 'counter': 0,
@@ -145,23 +147,48 @@ def post():
         abort(500)
 
 @put('/put/')
-def put():
+def api_update():
     try:
         _id = request.forms['id']
 
         _label = request.forms.get('label')
-        _description = request.forms.get('description')
 
         gate = db['teleport.gate'].find_one(ObjectId(_id))
 
-        if _label: gate['label'] = _label
-        if _description: gate['description'] = _description
+        if _label:
+            gate['label'] = _label
+            db['teleport.gate'].save(gate, safe=True)
 
-        _id = db['teleport.gate'].save(gate, safe=True)
+        # Reload
+        gate = db['teleport.gate'].find_one(ObjectId(_id))
 
         response.content_type = 'application/json'
         response.set_header('Cache-Control', 'no-cache')
-        return json.dumps({ 'status': 'OK', 'id': str(_id) })
+        return json.dumps({ 'status': 'OK', 'data': _gate_parser(gate) })
+    except InvalidId as e:
+        abort(400)
+    except pymongo.errors.OperationFailure as e:
+        abort(400)
+    except Exception as e:
+        traceback.print_exc()
+        abort(500)
+
+@post('/reset/')
+def api_reset():
+    try:
+        _id = request.forms['id']
+
+        gate = db['teleport.gate'].find_one(ObjectId(_id))
+
+        gate['token'] =  _random_token()
+        db['teleport.gate'].save(gate, safe=True)
+
+        # Reload
+        gate = db['teleport.gate'].find_one(ObjectId(_id))
+
+        response.content_type = 'application/json'
+        response.set_header('Cache-Control', 'no-cache')
+        return json.dumps({ 'status': 'OK', 'data': _gate_parser(gate) })
     except InvalidId as e:
         abort(400)
     except pymongo.errors.OperationFailure as e:
@@ -171,7 +198,7 @@ def put():
         abort(500)
 
 @delete('/delete/')
-def delete():
+def api_delete():
     try:
         _id = request.forms['id']
 

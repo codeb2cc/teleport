@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
     <link rel="stylesheet" href="/assets/css/app.css">
     <script type="text/javascript" src="/assets/js/lib/jquery/jquery.js"></script>
+    <script type="text/javascript" src="/assets/js/lib/bootstrap/bootstrap.js"></script>
     <script type="text/javascript" src="/assets/js/lib/knockout/knockout.js"></script>
     <script type="text/javascript" src="/assets/js/app.js"></script>
 %if not debug:
@@ -27,7 +28,7 @@
   <body>
     <header>
       <div class="container">
-        <h2>Porject Teleport <small>trace your host IP</small></h2>
+        <h2>Porject Teleport <small>track your host IP</small></h2>
       </div>
     </header>
     <div class="container">
@@ -39,22 +40,19 @@
               <dd id="info-username">Nobody</dd>
               <dt>Email</dt>
               <dd id="info-email">nobody@example.com</dd>
-              <dt>Last login</dt>
-              <dd id="info-ip">127.0.0.1</dd>
-              <dd id="info-date">2012/11/02 17:20:36</dd>
             </dl>
           </div>
         </div>
         <div class="span8">
           <div>
-            <p>Usage: <code>% curl teleport.codeb2cc.com/ping?token=TOKEN [ &ip=IP ]</code></p>
+            <p>Usage: <code>% curl teleport.codeb2cc.com/ping?token=TOKEN [ &ip=IP ] [ &message=MESSAGE ]</code></p>
           </div>
           <div>
             <div class="clearfix ib-wrap gate-control">
               <div class="ib" id="control-add">
                 <div class="input-append">
                   <input type="text" data-bind="event: { keypress: $root.add }" placeholder="New gate..."></td>
-                  <button type="button" class="btn" data-bind="click: $root.add, enable: gates().length < 5"><i class="icon-ok"></i></button>
+                  <button type="button" class="btn" data-bind="click: $root.add, enable: gates().length < 5"><i class="icon-plus"></i></button>
                 </div>
               </div>
               <div class="ib" id="control-search">
@@ -67,36 +65,15 @@
           </div>
           <div>
             <!-- ko foreach: gates -->
-            <div class="well gate-wrap" data-bind="fade: filterFlag">
+            <div class="well gate-wrap" data-bind="fade: hidden">
               <div class="clearfix ib-wrap">
                 <div class="ib gate-label" title="Gate Label">
                   <span class="icon"><i class="icon-tag"></i></span>
                   <div class="reader editable" data-bind="text: label, click: edit"></div>
                   <div class="input-append editor">
-                    <input type="text" data-bind="value: label.peek(), event: { keypress: editLabel }">
-                    <button type="button" class="btn" title="Edit" data-bind="click: editLabel"><i class="icon-edit"></i></button>
-                    <button type="button" class="btn" title="Reset" data-bind="click: resetLabel"><i class="icon-refresh"></i></button>
-                  </div>
-                </div>
-              </div>
-              <div class="clearfix ib-wrap">
-                <div class="ib gate-counter" title="Ping Counter">
-                  <span class="icon"><i class="icon-map-marker"></i></span>
-                  <div class="reader" data-bind="text: counter"></div>
-                </div>
-                <div class="ib gate-ip" title="Latest IP">
-                  <span class="icon"><i class="icon-globe"></i></span>
-                  <div class="reader" data-bind="text: ip"></div>
-                </div>
-              </div>
-              <div class="clearfix ib-wrap">
-                <div class="ib gate-description" title="Description">
-                  <span class="icon"><i class="icon-comment"></i></span>
-                  <div class="reader editable" data-bind="text: description, click: edit"></div>
-                  <div class="input-append editor">
-                    <input type="text" data-bind="value: description.peek(), event: { keypress: editDescription }">
-                    <button type="button" class="btn" title="Edit" data-bind="click: editDescription"><i class="icon-edit"></i></button>
-                    <button type="button" class="btn" title="Reset" data-bind="click: resetDescription"><i class="icon-refresh"></i></button>
+                    <input type="text" data-bind="value: label.peek(), event: { keypress: $parent.edit }">
+                    <button type="button" class="btn" title="Edit" data-bind="click: $parent.edit"><i class="icon-edit"></i></button>
+                    <button type="button" class="btn" title="Reset" data-bind="click: reset"><i class="icon-refresh"></i></button>
                   </div>
                 </div>
               </div>
@@ -106,8 +83,25 @@
                   <div class="reader"><span class="text-info" data-bind="text: token"></span></div>
                 </div>
               </div>
+              <div class="clearfix ib-wrap">
+                <div class="ib gate-counter" title="Ping Counter">
+                  <span class="icon"><i class="icon-map-marker"></i></span>
+                  <div class="reader" data-bind="text: counter"></div>
+                </div>
+                <div class="ib gate-ip" title="IP">
+                  <span class="icon"><i class="icon-globe"></i></span>
+                  <div class="reader" data-bind="text: ip"></div>
+                </div>
+              </div>
+              <div class="clearfix ib-wrap">
+                <div class="ib gate-message" title="Message">
+                  <span class="icon"><i class="icon-comment"></i></span>
+                  <div class="reader" data-bind="text: message"></div>
+                </div>
+              </div>
               <div class="gate-action">
                 <div class="btn-group">
+                  <button type="button" class="btn" title="History" data-bind="click: $parent.history, enable: ip"><i class="icon-book"></i></button>
                   <button type="button" class="btn" title="Reset Token" data-bind="click: $parent.reset"><i class="icon-repeat"></i></button>
                   <button type="button" class="btn" title="Delete Gate" data-bind="click: $parent.remove"><i class="icon-trash"></i></button>
                 </div>
@@ -118,5 +112,42 @@
         </div>
       </div>
     </div>
+    <div class="modal hide fade" id="modal-history">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3>Ping History</h3>
+      </div>
+      <div class="modal-body" data-bind="with: activeGate">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th width="12">#</th>
+              <th width="120">IP</th>
+              <th>Message</th>
+              <th width="160">Date</th>
+            </tr>
+          </thead>
+          <tbody data-bind="foreach: records">
+            <tr>
+              <td data-bind="text: $index"></td>
+              <td data-bind="text: ip"></td>
+              <td data-bind="text: message"></td>
+              <td>
+                <div data-bind="text: date.toLocaleTimeString()"></div>
+                <div data-bind="text: date.toLocaleDateString()"></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+    <footer>
+      <div class="container">
+        <p class="pull-right">&copy; codeb2cc.com 2012</p>
+      </div>
+    </footer>
   </body>
 </html>

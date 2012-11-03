@@ -1,4 +1,4 @@
-header {
+header, footer {
   padding: 40px 0;
 }
 
@@ -23,6 +23,11 @@ header {
   cursor: default;
   box-sizing: border-box;
   line-height: 20px;
+  overflow: hidden;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
 }
 .reader.editable:hover {
   background-color: white;
@@ -69,17 +74,11 @@ header {
 .gate-label .editor input {
   width: 450px;
 }
-.gate-description {
+.gate-message {
   width: 560px;
 }
-.gate-description .reader {
+.gate-message .reader {
   height: 100%;
-}
-.gate-description .editor {
-  display: none;
-}
-.gate-description .editor input {
-  width: 450px;
 }
 .gate-ip {
   width: 280px;
@@ -98,4 +97,8 @@ header {
 
 #control-add input {
   width: 304px;
+}
+#modal-history {
+  width: 900px;
+  margin: -250px 0 0 -450px;
 }
