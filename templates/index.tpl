@@ -126,7 +126,7 @@
     </div>
     <footer>
       <div class="container">
-        <p class="pull-right">&copy; codeb2cc.com 2012</p>
+        <p>&copy; codeb2cc.com 2012</p>
       </div>
     </footer>
   </body>
