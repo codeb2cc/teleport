@@ -1,7 +1,3 @@
-/*! 2012-11-05 11:51
- *  Copyright (c) 2012 codeb2cc.com
- */
-
 // use strict;
 
 ko.bindingHandlers['fade'] = {
