@@ -11,7 +11,7 @@
         <h2>Porject Teleport <small>track your host IP</small></h2>
       </div>
     </header>
-    <div class="container">
+    <div class="container main">
       <div class="row">
         <div class="span4">
           <div>

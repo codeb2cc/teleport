@@ -54,12 +54,15 @@ footer {
   left: 0;
 }
 
+.main {
+  min-height: 420px;
+}
+
 [class^="gate-"],
 [class*=" gate-"] {
   font-size: 14px;
   position: relative;
 }
-
 .gate-control {
   margin-bottom: 4px;
 }
@@ -73,6 +76,7 @@ footer {
 .gate-counter {
   width: 280px;
 }
+
 .gate-label {
   width: 560px;
 }
@@ -85,16 +89,19 @@ footer {
 .gate-label .editor input {
   width: 450px;
 }
+
 .gate-message {
   width: 560px;
 }
 .gate-message .reader {
   height: 100%;
 }
+
 .gate-ip {
   width: 280px;
 }
 .gate-token {}
+
 .gate-history {}
 
 .gate-action {
@@ -109,6 +116,7 @@ footer {
 #control-add input {
   width: 304px;
 }
+
 #modal-history {
   width: 900px;
   margin: -250px 0 0 -450px;
