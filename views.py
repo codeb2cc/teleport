@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-03 20:13
+# Last Change: 2012-11-05 10:26
 
 import json, datetime
 import random
@@ -29,16 +29,17 @@ def index():
     except Exception as e:
         abort(500)
 
-@post('/sigin/')
-def sigin():
+@post('/signin/')
+def signin():
     pass
 
-@post('/login/')
-def login():
+@post('/signout/')
+def signout():
     pass
 
-@post('/logout/')
-def logout():
+@get('/signup/')
+@post('/signup/')
+def signup():
     pass
 
 @get('/ping')
