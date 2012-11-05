@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-05 10:26
+# Last Change: 2012-11-05 13:24
 
 import json, datetime
 import random
@@ -16,8 +16,8 @@ from bottle import view, request, response, abort
 
 from .db import db
 from .conf import DEBUG
-from .tools.paginator import Paginator
-from .tools.hash_tool import str2md5
+from .utils.paginator import Paginator
+from .utils.hash_tool import str2md5
 
 @get('/')
 @view('index.tpl')
