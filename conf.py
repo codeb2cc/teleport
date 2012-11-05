@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-05 14:06
+# Last Change: 2012-11-05 14:09
 
 DEBUG = False
 
@@ -17,4 +17,4 @@ TEMPLATE_PATH = [
     ]
 
 LABEL_MAX = 48
-MESSAGE_MAX = 256
+MESSAGE_MAX = 1024
