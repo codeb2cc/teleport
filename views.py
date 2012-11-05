@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-05 13:24
+# Last Change: 2012-11-05 14:07
 
 import json, datetime
 import random
@@ -16,6 +16,7 @@ from bottle import view, request, response, abort
 
 from .db import db
 from .conf import DEBUG
+from .conf import LABEL_MAX, MESSAGE_MAX
 from .utils.paginator import Paginator
 from .utils.hash_tool import str2md5
 
@@ -58,7 +59,7 @@ def ping():
         len(gate['records']) > 5 and gate['records'].pop()
         gate['records'].insert(0, {
                 'ip'     : _ip,
-                'message': _message,
+                'message': _message[:MESSAGE_MAX],
                 'date'   : datetime.datetime.utcnow()
             })
 
@@ -125,7 +126,7 @@ def api_add():
         _label = request.forms['label']
 
         gate = {
-                'label': _label,
+                'label': _label[:LABEL_MAX],
                 'token': _random_token(),
                 'records': [],
                 'counter': 0,
@@ -157,7 +158,7 @@ def api_update():
         gate = db['teleport.gate'].find_one(ObjectId(_id))
 
         if _label:
-            gate['label'] = _label
+            gate['label'] = _label[:LABEL_MAX]
             db['teleport.gate'].save(gate, safe=True)
 
         # Reload

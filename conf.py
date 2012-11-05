@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-10-29 22:02
+# Last Change: 2012-11-05 14:06
 
 DEBUG = False
 
@@ -15,3 +15,6 @@ DB = {
 TEMPLATE_PATH = [
         './templates/',
     ]
+
+LABEL_MAX = 48
+MESSAGE_MAX = 256
