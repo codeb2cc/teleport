@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-05 14:07
+# Last Change: 2012-11-06 19:08
 
 import json, datetime
 import random
@@ -21,7 +21,7 @@ from .utils.paginator import Paginator
 from .utils.hash_tool import str2md5
 
 @get('/')
-@view('index.tpl')
+@view('panel.tpl')
 def index():
     try:
         tpl_dict = { 'debug': DEBUG }
@@ -30,9 +30,16 @@ def index():
     except Exception as e:
         abort(500)
 
+@get('/signin/')
 @post('/signin/')
+@view('signin.tpl')
 def signin():
-    pass
+    try:
+        tpl_dict = { 'debug': DEBUG }
+
+        return tpl_dict
+    except Exception as e:
+        abort(500)
 
 @post('/signout/')
 def signout():
