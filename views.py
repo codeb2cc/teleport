@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-08 06:49
+# Last Change: 2012-11-08 07:02
 
 import json, datetime
 import random
@@ -254,13 +254,23 @@ def _gate_parser(doc):
 @get('/get/')
 def api_fetch():
     try:
+        # Session {
+        _session_id = request.get_cookie('_session')
+
+        session = session_store.get(_session_id)
+        if not session:
+            abort(400)
+        # }
+
+        user = db['teleport.user'].find_one(ObjectId(session['uid']))
+
         _id = request.query.get('id')
 
         if _id:
-            gate = db['teleport.gate'].find_one(ObjectId(_id))
+            gate = db['teleport.gate'].find_one({ 'id': ObjectId(_id), 'user': user['_id'] })
             res = _gate_parser(gate)
         else:
-            cursor = db['teleport.gate'].find(
+            cursor = db['teleport.gate'].find({ 'user': user['_id'] },
                     sort = [ ('date', pymongo.DESCENDING), ],
                 )
             res = [ _gate_parser(doc) for doc in cursor ]
@@ -285,14 +295,26 @@ def _random_token(length=32):
 @post('/post/')
 def api_add():
     try:
+        # Session {
+        _session_id = request.get_cookie('_session')
+
+        session = session_store.get(_session_id)
+        if not session:
+            abort(400)
+        # }
+
+        user = db['teleport.user'].find_one(ObjectId(session['uid']))
+
         _label = request.forms['label']
+
+        print user
 
         gate = {
                 'label': _label[:LABEL_MAX],
                 'token': _random_token(),
                 'records': [],
                 'counter': 0,
-                'user_id': None,
+                'user': user['_id'],
                 'date': datetime.datetime.now(),
             }
 
@@ -315,15 +337,23 @@ def api_add():
 @put('/put/')
 def api_update():
     try:
+        # Session {
+        _session_id = request.get_cookie('_session')
+
+        session = session_store.get(_session_id)
+        if not session:
+            abort(400)
+        # }
+
+        user = db['teleport.user'].find_one(ObjectId(session['uid']))
+
         _id = request.forms['id']
+        _label = request.forms['label']
 
-        _label = request.forms.get('label')
+        gate = db['teleport.gate'].find_one({ 'id': ObjectId(_id), 'user': user['_id'] })
 
-        gate = db['teleport.gate'].find_one(ObjectId(_id))
-
-        if _label:
-            gate['label'] = _label[:LABEL_MAX]
-            db['teleport.gate'].save(gate, safe=True)
+        gate['label'] = _label[:LABEL_MAX]
+        db['teleport.gate'].save(gate, safe=True)
 
         # Reload
         gate = db['teleport.gate'].find_one(ObjectId(_id))
@@ -344,9 +374,19 @@ def api_update():
 @post('/reset/')
 def api_reset():
     try:
+        # Session {
+        _session_id = request.get_cookie('_session')
+
+        session = session_store.get(_session_id)
+        if not session:
+            abort(400)
+        # }
+
+        user = db['teleport.user'].find_one(ObjectId(session['uid']))
+
         _id = request.forms['id']
 
-        gate = db['teleport.gate'].find_one(ObjectId(_id))
+        gate = db['teleport.gate'].find_one({ 'id': ObjectId(_id), 'user': user['_id'] })
 
         gate['token'] =  _random_token()
         db['teleport.gate'].save(gate, safe=True)
@@ -370,9 +410,19 @@ def api_reset():
 @delete('/delete/')
 def api_delete():
     try:
+        # Session {
+        _session_id = request.get_cookie('_session')
+
+        session = session_store.get(_session_id)
+        if not session:
+            abort(400)
+        # }
+
+        user = db['teleport.user'].find_one(ObjectId(session['uid']))
+
         _id = request.forms['id']
 
-        err = db['teleport.gate'].remove(ObjectId(_id), safe=True)
+        err = db['teleport.gate'].remove({ 'id': ObjectId(_id), 'user': user['_id'] }, safe=True)
 
         response.content_type = 'application/json'
         response.set_header('Cache-Control', 'no-cache')

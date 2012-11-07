@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-08 03:25
+# Last Change: 2012-11-08 06:56
 
 from pymongo import Connection
 from pymongo.errors import AutoReconnect
@@ -36,6 +36,6 @@ except Exception as e:
                 # { 'ip': '', 'message': '', date': '' }
             # ],
         # 'counter': 0,
-        # 'user_id': '',
+        # 'user': '',
         # 'date': '',
     # }
