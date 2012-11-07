@@ -13,10 +13,14 @@
   <body>
 %include common/header.tpl
     <div class="container main">
-      <div class="row">
-        <div class="alert">
-          <a href="/" class="close">x</a>
-          <strong>{{ message }}</strong>
+      <div class="row" style="margin-top: 100px;">
+        <div class="span2"></div>
+        <div class="span8">
+          <div class="alert alert-block">
+            <a href="/" class="close">x</a>
+            <h4>{{ title }}</h4>
+            {{ message }}
+          </div>
         </div>
       </div>
     </div>

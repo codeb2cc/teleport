@@ -1,4 +1,4 @@
-/*! 2012-11-08 05:44
+/*! 2012-11-08 06:53
  *  Copyright (c) 2012 codeb2cc.com
  */
 
@@ -386,6 +386,25 @@
         confirm: ko.observable()
       }
 
+      this.alertMessage = ko.observable('')
+
+      this.reset = function () {
+        this.signIn.salt = ''
+        this.signIn.key('')
+        this.signIn.password('')
+        this.signIn.email('')
+        this.signIn.raw('')
+
+        this.signUp.salt = ''
+        this.signUp.key('')
+        this.signUp.password('')
+        this.signUp.email('')
+        this.signUp.raw('')
+        this.signUp.confirm('')
+
+        this.alertMessage('')
+      }
+
       this.challenge = function () {
         var that = this
         var email = this.signIn.email() || this.signUp.email()
@@ -402,13 +421,35 @@
             that.signIn.key(data['code'][1])
             that.signUp.salt = data['code'][0]
             that.signUp.key(data['code'][1])
+
+            that.alertMessage('')
           },
           error: function (jqXHR, textStatus, errorThrown) {
-            console.warn('Invalid Email')
+            that.alertMessage('Invalid email')
           }
         })
       }
       ko.computed(this.challenge, this)
+
+      this.activeSignIn = function (view, event) {
+        $('#sign-mode span.active').removeClass('active')
+        $(event.target).toggleClass('active')
+
+        view.reset()
+
+        $('#form-sign-up').hide()
+        $('#form-sign-in').fadeIn()
+      }
+
+      this.activeSignUp = function (view, event) {
+        $('#sign-mode span.active').removeClass('active')
+        $(event.target).toggleClass('active')
+
+        view.reset()
+
+        $('#form-sign-in').hide()
+        $('#form-sign-up').fadeIn()
+      }
 
       this.beforeSignIn = function () {
         if (!this.signIn.salt || !this.signIn.key()) {
@@ -426,6 +467,16 @@
 
       this.beforeSignUp = function () {
         if (!this.signUp.key()) {
+          return false
+        }
+
+        if (this.signUp.raw().length < 6) {
+          this.alertMessage('Password is too short (less than 6 characters)')
+
+          return false
+        } else if (this.signUp.raw() !== this.signUp.confirm()) {
+          this.alertMessage('Passwords mismatch')
+
           return false
         }
 

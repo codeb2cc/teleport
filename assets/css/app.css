@@ -53,8 +53,9 @@ footer {
 }
 
 .main {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 32px;
+  margin-bottom: 32px;
+  min-height: 402px;
 }
 
 [class^="gate-"],
@@ -110,6 +111,31 @@ footer {
 }
 .gate-action .btn {
   border-color: #E3E3E3;
+}
+
+#auth-form {
+  margin-top: 60px;
+  height: 240px;
+}
+
+#auth-info {
+  padding-left: 210px;
+}
+
+#sign-mode {
+  font-size: 81px;
+  line-height: 81px;
+  color: silver;
+  text-align: right;
+}
+
+#sign-mode span:hover {
+  color: gray;
+  cursor: pointer;
+}
+
+#sign-mode span.active {
+  color: gray;
 }
 
 #control-add input {

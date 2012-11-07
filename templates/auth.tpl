@@ -13,9 +13,13 @@
   <body>
 %include common/header.tpl
     <div class="container main">
-      <div class="row">
-        <div class="span6">
-          <div><span>Sign In</span></div>
+      <div class="row" id="auth-form">
+        <div class="span5">
+          <div id="sign-mode">
+            Sign <span class="active" data-bind="click: activeSignIn">IN</span>&nbsp;/&nbsp;<span data-bind="click: activeSignUp">UP</span>
+          </div>
+        </div>
+        <div class="span7">
           <form class="form-horizontal" method="post" action="/signin/" id="form-sign-in" data-bind="submit: beforeSignIn">
             <div style="display: hidden;">
               <input type="hidden" name="key" data-bind="value: signIn.key">
@@ -39,10 +43,7 @@
               </div>
             </div>
           </form>
-        </div>
-        <div class="span6">
-          <div><span>Sign Up</span></div>
-          <form class="form-horizontal" method="post" action="/signup/" id="form-sign-up" data-bind="submit: beforeSignUp">
+          <form class="form-horizontal" method="post" action="/signup/" id="form-sign-up" data-bind="submit: beforeSignUp" style="display: none;">
             <div style="display: hidden;">
               <input type="hidden" name="key" data-bind="value: signUp.key">
               <input type="hidden" name="password" data-bind="value: signUp.password">
@@ -72,6 +73,9 @@
             </div>
           </form>
         </div>
+      </div>
+      <div class="row" id="auth-info">
+        <div class="alert span6" data-bind="fade: alertMessage, text: alertMessage" style="display: none;"></div>
       </div>
     </div>
 %include common/footer.tpl

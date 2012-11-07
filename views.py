@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-08 05:45
+# Last Change: 2012-11-08 06:49
 
 import json, datetime
 import random
@@ -96,12 +96,12 @@ def signin():
         user = db['teleport.user'].find_one({ 'email': _email })
 
         if not user:
-            return template('passport', debug=DEBUG, message='Invalid Email or Password' )
+            return template('passport', debug=DEBUG, title='Login Failed', message='Invalid Email or Password' )
 
         method, salt, hashval = user['password'].split('$', 2)
 
         if not safe_str_cmp(_raw, hashval):
-            return template('passport', debug=DEBUG, message='Invalid Email or Password' )
+            return template('passport', debug=DEBUG, title='Login Failed', message='Invalid Email or Password' )
 
         user['password'] = '%s$%s$%s' % (HMAC_METHOD, _salt, _password)
 
