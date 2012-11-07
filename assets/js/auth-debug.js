@@ -1,4 +1,4 @@
-/*! 2012-11-08 06:53
+/*! 2012-11-08 07:19
  *  Copyright (c) 2012 codeb2cc.com
  */
 
@@ -453,6 +453,8 @@
 
       this.beforeSignIn = function () {
         if (!this.signIn.salt || !this.signIn.key()) {
+          this.alertMessage('User does not exist')
+
           return false
         }
 

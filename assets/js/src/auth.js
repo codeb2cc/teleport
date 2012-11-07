@@ -90,6 +90,8 @@
 
       this.beforeSignIn = function () {
         if (!this.signIn.salt || !this.signIn.key()) {
+          this.alertMessage('User does not exist')
+
           return false
         }
 
