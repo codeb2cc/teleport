@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-08 07:02
+# Last Change: 2012-11-08 07:12
 
 import json, datetime
 import random
@@ -151,6 +151,9 @@ def signup():
 
         if len(_salt) != HMAC_SALT_LEN or len(_password) != HMAC_PASSWORD_LEN:
             abort(400)
+
+        if db['teleport.user'].find_one({ 'email': _email }):
+            return template('passport', debug=DEBUG, title='Signup Failed', message='This email is already registered' )
 
         user = {
             'email': _email,
