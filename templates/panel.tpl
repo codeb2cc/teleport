@@ -4,22 +4,21 @@
     <title>Teleport - codeb2cc.com</title>
 %include common/stylesheet.tpl debug=debug
 %include common/script.tpl debug=debug
+%if debug:
+    <script type="text/javascript" src="/assets/js/panel-debug.js"></script>
+%else:
+    <script type="text/javascript" src="/assets/js/panel.js"></script>
+%end
   </head>
   <body>
-    <header>
-      <div class="container">
-        <h2>Porject Teleport <small>track your host IP</small></h2>
-      </div>
-    </header>
+%include common/header.tpl
     <div class="container main">
       <div class="row">
         <div class="span4">
           <div>
             <dl>
-              <dt>Username</dt>
-              <dd id="info-username">Nobody</dd>
-              <dt>Email</dt>
-              <dd id="info-email">nobody@example.com</dd>
+              <dt>Account</dt>
+              <dd>nobody@example.com</dd>
             </dl>
           </div>
         </div>
@@ -124,10 +123,6 @@
         <button type="button" class="btn" data-dismiss="modal">Close</button>
       </div>
     </div>
-    <footer>
-      <div class="container">
-        <p>&copy; codeb2cc.com 2012</p>
-      </div>
-    </footer>
+%include common/footer.tpl
   </body>
 </html>

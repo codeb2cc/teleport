@@ -6,15 +6,23 @@ module.exports = function (grunt) {
         ' */'
     },
     concat: {
-      dist: {
-        src: ['<banner>', 'assets/js/src/app.js'],
-        dest: 'assets/js/app-debug.js'
+      auth: {
+        src: ['<banner>', 'assets/js/src/common.js', 'assets/js/src/security.js', 'assets/js/src/auth.js'],
+        dest: 'assets/js/auth-debug.js'
+      },
+      panel: {
+        src: ['<banner>', 'assets/js/src/common.js', 'assets/js/src/panel.js'],
+        dest: 'assets/js/panel-debug.js'
       }
     },
     min: {
-      dist: {
-        src: ['<banner>', 'assets/js/app-debug.js'],
-        dest: 'assets/js/app.js'
+      auth: {
+        src: ['<banner>', 'assets/js/auth-debug.js'],
+        dest: 'assets/js/auth.js'
+      },
+      panel: {
+        src: ['<banner>', 'assets/js/panel-debug.js'],
+        dest: 'assets/js/panel.js'
       }
     }
   })

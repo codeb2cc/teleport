@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-03 14:42
+# Last Change: 2012-11-08 03:25
 
 from pymongo import Connection
 from pymongo.errors import AutoReconnect
@@ -23,9 +23,9 @@ except Exception as e:
 
 # Model Definition
 # user = {
-        # 'username': '',
         # 'email': '',
         # 'password': '',
+        # 'date': '',
     # }
 
 # gate = {

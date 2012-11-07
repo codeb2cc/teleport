@@ -2,12 +2,10 @@
   <script type="text/javascript" src="/assets/js/lib/jquery/jquery-debug.js"></script>
   <script type="text/javascript" src="/assets/js/lib/bootstrap/bootstrap-debug.js"></script>
   <script type="text/javascript" src="/assets/js/lib/knockout/knockout-debug.js"></script>
-  <script type="text/javascript" src="/assets/js/app-debug.js"></script>
 %else:
   <script type="text/javascript" src="/assets/js/lib/jquery/jquery.js"></script>
   <script type="text/javascript" src="/assets/js/lib/bootstrap/bootstrap.js"></script>
   <script type="text/javascript" src="/assets/js/lib/knockout/knockout.js"></script>
-  <script type="text/javascript" src="/assets/js/app.js"></script>
   <script type="text/javascript">
 
     var _gaq = _gaq || [];
