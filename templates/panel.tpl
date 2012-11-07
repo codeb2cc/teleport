@@ -18,13 +18,13 @@
           <div>
             <dl>
               <dt>Account</dt>
-              <dd>nobody@example.com</dd>
+              <dd>{{ user['email'] }}</dd>
             </dl>
           </div>
         </div>
         <div class="span8">
           <div>
-            <p>Usage: <code>% curl teleport.codeb2cc.com/ping?token=TOKEN [ &ip=IP ] [ &message=MESSAGE ]</code></p>
+            <p>Usage: <code>% curl teleport.codeb2cc.com/ping/?token=TOKEN [ &ip=IP ] [ &message=MESSAGE ]</code></p>
           </div>
           <div>
             <div class="clearfix ib-wrap gate-control">

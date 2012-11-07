@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-08 03:46
+# Last Change: 2012-11-08 05:28
 
 import json, datetime
 import random
@@ -23,32 +23,62 @@ from .db import db
 from .conf import DEBUG
 from .conf import LABEL_MAX, MESSAGE_MAX
 from .conf import HMAC_METHOD, HMAC_SALT_LEN, HMAC_PASSWORD_LEN
+from .conf import SESSION_COLLECTION
+from .utils.session import MongoSessionStore
 from .utils.paginator import Paginator
 from .utils.hash_tool import str2md5
 from .utils.validator import validate_email
 
-@get('/panel')
+session_store = MongoSessionStore(collection=SESSION_COLLECTION)
+
+@get('/panel/')
 @view('panel.tpl')
 def panel():
     try:
-        tpl_dict = { 'debug': DEBUG }
+        # Session {
+        _session_id = request.get_cookie('_session')
+
+        session = session_store.get(_session_id)
+        if not session:
+            response.status = 302
+            response.set_header('Location', '/')
+            return
+        # }
+
+        user = db['teleport.user'].find_one(ObjectId(session['uid']))
+
+        tpl_dict = {
+            'user': user,
+            'debug': DEBUG,
+        }
 
         return tpl_dict
     except HTTPError as e:
         raise e
     except Exception as e:
+        traceback.print_exc()
         abort(500)
 
 @get('/')
 @view('auth.tpl')
 def auth():
     try:
+        # Session {
+        _session_id = request.get_cookie('_session')
+
+        if _session_id and session_store.get(_session_id):
+            response.status = 302
+            response.set_header('Location', '/panel/')
+            return
+        # }
+
         tpl_dict = { 'debug': DEBUG }
 
         return tpl_dict
     except HTTPError as e:
         raise e
     except Exception as e:
+        traceback.print_exc()
         abort(500)
 
 @post('/signin/')
@@ -76,8 +106,13 @@ def signin():
 
         _id = db['teleport.user'].save(user, safe=True)
 
+        _session = session_store.new()
+        _session['uid'] = str(_id)
+        session_store.save(_session)
+
         response.status = 302
-        response.set_header('Location', '/panel')
+        response.set_header('Location', '/panel/')
+        response.set_cookie('_session', _session.sid, path='/')
         return
     except KeyError as e:
         abort(400)
@@ -87,11 +122,18 @@ def signin():
         traceback.print_exc()
         abort(500)
 
-@post('/signout/')
+@get('/signout/')
 def signout():
     try:
+        _session_id = request.get_cookie('_session')
+
+        session = session_store.get(_session_id)
+        if session:
+            session_store.delete(session)
+
         response.status = 302
         response.set_header('Location', '/')
+        response.delete_cookie('_session', path='/')
         return
     except HTTPError as e:
         raise e
@@ -117,9 +159,13 @@ def signup():
 
         _id = db['teleport.user'].insert(user)
 
+        _session = session_store.new()
+        _session['uid'] = str(_id)
+        session_store.save(_session)
+
         response.status = 302
-        response.set_header('Location', '/panel')
-        return
+        response.set_header('Location', '/panel/')
+        response.set_cookie('_session', _session.sid, path='/')
     except KeyError as e:
         abort(400)
     except HTTPError as e:
@@ -152,8 +198,8 @@ def challenge():
         traceback.print_exc()
         abort(500)
 
-@get('/ping')
-def ping():
+@get('/ping/')
+def api_ping():
     try:
         _token = request.query.get('token', type=str)
         _ip = request.query.get('ip', type=str) or request.remote_addr

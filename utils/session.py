@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-08 04:38
+# Last Change: 2012-11-08 05:24
 
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
@@ -18,13 +18,22 @@ class MongoSessionStore(SessionStore):
 
         self.collection = db[collection]
 
+        # Empty session collection
+        self.collection.remove()
+
     def save(self, session):
-        _id = self.collection.insert(dict(session))
+        _data = dict(session)
+        _data['sid'] = session.sid
+
+        _id = self.collection.insert(_data)
 
     def delete(self, session):
-        _error = self.collection.remove({ 'sid': session.sid })
+        _error = self.collection.remove({ 'sid': session.sid }, safe=True)
 
     def get(self, sid):
         _doc = self.collection.find_one({ 'sid': sid })
 
-        return self.session_class(_doc, sid, False)
+        if _doc:
+            return self.session_class(_doc, sid, False)
+
+        return None
