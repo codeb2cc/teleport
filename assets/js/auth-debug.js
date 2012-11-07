@@ -1,4 +1,4 @@
-/*! 2012-11-08 03:13
+/*! 2012-11-08 05:44
  *  Copyright (c) 2012 codeb2cc.com
  */
 
@@ -411,6 +411,10 @@
       ko.computed(this.challenge, this)
 
       this.beforeSignIn = function () {
+        if (!this.signIn.salt || !this.signIn.key()) {
+          return false
+        }
+
         var hmac = window.SHA.hex_hmac_sha1(this.signIn.salt, this.signIn.raw())
         var nextHmac = window.SHA.hex_hmac_sha1(this.signIn.key(), this.signIn.raw())
 
@@ -421,6 +425,10 @@
       }
 
       this.beforeSignUp = function () {
+        if (!this.signUp.key()) {
+          return false
+        }
+
         var hmac = window.SHA.hex_hmac_sha1(this.signUp.key(), this.signUp.raw())
 
         this.signUp.raw(hmac)

@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-08 05:28
+# Last Change: 2012-11-08 05:45
 
 import json, datetime
 import random
@@ -13,6 +13,7 @@ from bson.objectid import ObjectId
 from bson.errors import InvalidId
 
 from bottle import get, post, put, delete
+from bottle import template
 from bottle import view, request, response, abort
 from bottle import HTTPError
 
@@ -95,12 +96,12 @@ def signin():
         user = db['teleport.user'].find_one({ 'email': _email })
 
         if not user:
-            abort(400)
+            return template('passport', debug=DEBUG, message='Invalid Email or Password' )
 
         method, salt, hashval = user['password'].split('$', 2)
 
         if not safe_str_cmp(_raw, hashval):
-            abort(400)
+            return template('passport', debug=DEBUG, message='Invalid Email or Password' )
 
         user['password'] = '%s$%s$%s' % (HMAC_METHOD, _salt, _password)
 
