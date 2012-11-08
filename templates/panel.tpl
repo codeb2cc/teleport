@@ -17,7 +17,7 @@
         <div class="span4">
           <div>
             <dl>
-              <dt>Account</dt>
+              <dt>Account <a href="/signout/" title="Sign out"><i class="icon-off"></i></a></dt>
               <dd>{{ user['email'] }}</dd>
             </dl>
           </div>
