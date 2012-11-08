@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-08 07:12
+# Last Change: 2012-11-08 10:06
 
 import json, datetime
 import random
@@ -270,7 +270,7 @@ def api_fetch():
         _id = request.query.get('id')
 
         if _id:
-            gate = db['teleport.gate'].find_one({ 'id': ObjectId(_id), 'user': user['_id'] })
+            gate = db['teleport.gate'].find_one({ '_id': ObjectId(_id), 'user': user['_id'] })
             res = _gate_parser(gate)
         else:
             cursor = db['teleport.gate'].find({ 'user': user['_id'] },
@@ -353,7 +353,7 @@ def api_update():
         _id = request.forms['id']
         _label = request.forms['label']
 
-        gate = db['teleport.gate'].find_one({ 'id': ObjectId(_id), 'user': user['_id'] })
+        gate = db['teleport.gate'].find_one({ '_id': ObjectId(_id), 'user': user['_id'] })
 
         gate['label'] = _label[:LABEL_MAX]
         db['teleport.gate'].save(gate, safe=True)
@@ -389,7 +389,7 @@ def api_reset():
 
         _id = request.forms['id']
 
-        gate = db['teleport.gate'].find_one({ 'id': ObjectId(_id), 'user': user['_id'] })
+        gate = db['teleport.gate'].find_one({ '_id': ObjectId(_id), 'user': user['_id'] })
 
         gate['token'] =  _random_token()
         db['teleport.gate'].save(gate, safe=True)
@@ -425,7 +425,7 @@ def api_delete():
 
         _id = request.forms['id']
 
-        err = db['teleport.gate'].remove({ 'id': ObjectId(_id), 'user': user['_id'] }, safe=True)
+        err = db['teleport.gate'].remove({ '_id': ObjectId(_id), 'user': user['_id'] }, safe=True)
 
         response.content_type = 'application/json'
         response.set_header('Cache-Control', 'no-cache')
