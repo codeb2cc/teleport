@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-08 10:06
+# Last Change: 2012-11-08 10:32
 
 import json, datetime
 import random
@@ -14,8 +14,8 @@ from bson.errors import InvalidId
 
 from bottle import get, post, put, delete
 from bottle import template
-from bottle import view, request, response, abort
-from bottle import HTTPError
+from bottle import view, request, response, abort, redirect
+from bottle import HTTPError, HTTPResponse
 
 from werkzeug.security import safe_str_cmp, safe_join
 from werkzeug.security import gen_salt, generate_password_hash, check_password_hash
@@ -41,9 +41,7 @@ def panel():
 
         session = session_store.get(_session_id)
         if not session:
-            response.status = 302
-            response.set_header('Location', '/')
-            return
+            redirect('/')
         # }
 
         user = db['teleport.user'].find_one(ObjectId(session['uid']))
@@ -54,7 +52,7 @@ def panel():
         }
 
         return tpl_dict
-    except HTTPError as e:
+    except (HTTPError, HTTPResponse) as e:
         raise e
     except Exception as e:
         traceback.print_exc()
@@ -68,15 +66,13 @@ def auth():
         _session_id = request.get_cookie('_session')
 
         if _session_id and session_store.get(_session_id):
-            response.status = 302
-            response.set_header('Location', '/panel/')
-            return
+            redirect('/panel/')
         # }
 
         tpl_dict = { 'debug': DEBUG }
 
         return tpl_dict
-    except HTTPError as e:
+    except (HTTPError, HTTPResponse) as e:
         raise e
     except Exception as e:
         traceback.print_exc()
@@ -111,13 +107,12 @@ def signin():
         _session['uid'] = str(_id)
         session_store.save(_session)
 
-        response.status = 302
-        response.set_header('Location', '/panel/')
         response.set_cookie('_session', _session.sid, path='/')
-        return
+
+        redirect('/panel/')
     except KeyError as e:
         abort(400)
-    except HTTPError as e:
+    except (HTTPError, HTTPResponse) as e:
         raise e
     except Exception as e:
         traceback.print_exc()
@@ -132,11 +127,10 @@ def signout():
         if session:
             session_store.delete(session)
 
-        response.status = 302
-        response.set_header('Location', '/')
         response.delete_cookie('_session', path='/')
-        return
-    except HTTPError as e:
+
+        redirect('/')
+    except (HTTPError, HTTPResponse) as e:
         raise e
     except Exception as e:
         traceback.print_exc()
@@ -167,12 +161,12 @@ def signup():
         _session['uid'] = str(_id)
         session_store.save(_session)
 
-        response.status = 302
-        response.set_header('Location', '/panel/')
         response.set_cookie('_session', _session.sid, path='/')
+
+        redirect('/panel/')
     except KeyError as e:
         abort(400)
-    except HTTPError as e:
+    except (HTTPError, HTTPResponse) as e:
         raise e
     except Exception as e:
         traceback.print_exc()
@@ -196,7 +190,7 @@ def challenge():
         response.content_type = 'application/json'
         response.set_header('Cache-Control', 'no-cache')
         return json.dumps({ 'status': 'OK', 'code': [_salt, gen_salt(HMAC_SALT_LEN)] })
-    except HTTPError as e:
+    except (HTTPError, HTTPResponse) as e:
         raise e
     except Exception as e:
         traceback.print_exc()
@@ -227,7 +221,7 @@ def api_ping():
         response.content_type = 'application/json'
         response.set_header('Cache-Control', 'no-cache')
         return json.dumps({ 'status': 'OK', 'ip': _ip })
-    except HTTPError as e:
+    except (HTTPError, HTTPResponse) as e:
         raise e
     except Exception as e:
         traceback.print_exc()
@@ -248,7 +242,7 @@ def _gate_parser(doc):
             record['date'] = record['date'].isoformat()
 
         return res
-    except HTTPError as e:
+    except (HTTPError, HTTPResponse) as e:
         raise e
     except Exception as e:
         traceback.print_exc()
@@ -283,7 +277,7 @@ def api_fetch():
         return json.dumps({ 'status': 'OK', 'data': res })
     except InvalidId as e:
         abort(400)
-    except HTTPError as e:
+    except (HTTPError, HTTPResponse) as e:
         raise e
     except Exception as e:
         traceback.print_exc()
@@ -331,7 +325,7 @@ def api_add():
         return json.dumps({ 'status': 'OK', 'data': _gate_parser(gate) })
     except KeyError as e:
         abort(400)
-    except HTTPError as e:
+    except (HTTPError, HTTPResponse) as e:
         raise e
     except Exception as e:
         traceback.print_exc()
@@ -368,7 +362,7 @@ def api_update():
         abort(400)
     except pymongo.errors.OperationFailure as e:
         abort(400)
-    except HTTPError as e:
+    except (HTTPError, HTTPResponse) as e:
         raise e
     except Exception as e:
         traceback.print_exc()
@@ -404,7 +398,7 @@ def api_reset():
         abort(400)
     except pymongo.errors.OperationFailure as e:
         abort(400)
-    except HTTPError as e:
+    except (HTTPError, HTTPResponse) as e:
         raise e
     except Exception as e:
         traceback.print_exc()
@@ -434,7 +428,7 @@ def api_delete():
         abort(400)
     except KeyError as e:
         abort(400)
-    except HTTPError as e:
+    except (HTTPError, HTTPResponse) as e:
         raise e
     except Exception as e:
         traceback.print_exc()
