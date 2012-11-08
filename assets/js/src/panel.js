@@ -60,8 +60,8 @@
       this.activeGate = ko.observable()
 
       // Topbar {
-      this.add = function () {
-        if (event.type === 'keypress' && event.keyCode !== 13) {
+      this.add = function (v, e) {
+        if (e.type === 'keypress' && e.keyCode !== 13) {
           return true
         }
 
