@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-08 04:43
+# Last Change: 2012-11-09 11:47
 
 DEBUG = True
 
@@ -12,7 +12,7 @@ DB = {
         'NAME': 'teleport',
     }
 
-SESSION_COLLECTION = 'teleport.session'
+SESSION_COLLECTION = 'session'
 
 TEMPLATE_PATH = [
         './templates/',

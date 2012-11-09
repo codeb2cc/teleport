@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-08 10:32
+# Last Change: 2012-11-09 11:49
 
 import json, datetime
 import random
@@ -44,7 +44,7 @@ def panel():
             redirect('/')
         # }
 
-        user = db['teleport.user'].find_one(ObjectId(session['uid']))
+        user = db['user'].find_one(ObjectId(session['uid']))
 
         tpl_dict = {
             'user': user,
@@ -89,7 +89,7 @@ def signin():
         if len(_salt) != HMAC_SALT_LEN or len(_password) != HMAC_PASSWORD_LEN or len(_raw) != HMAC_PASSWORD_LEN:
             abort(400)
 
-        user = db['teleport.user'].find_one({ 'email': _email })
+        user = db['user'].find_one({ 'email': _email })
 
         if not user:
             return template('passport', debug=DEBUG, title='Login Failed', message='Invalid Email or Password' )
@@ -101,7 +101,7 @@ def signin():
 
         user['password'] = '%s$%s$%s' % (HMAC_METHOD, _salt, _password)
 
-        _id = db['teleport.user'].save(user, safe=True)
+        _id = db['user'].save(user, safe=True)
 
         _session = session_store.new()
         _session['uid'] = str(_id)
@@ -146,7 +146,7 @@ def signup():
         if len(_salt) != HMAC_SALT_LEN or len(_password) != HMAC_PASSWORD_LEN:
             abort(400)
 
-        if db['teleport.user'].find_one({ 'email': _email }):
+        if db['user'].find_one({ 'email': _email }):
             return template('passport', debug=DEBUG, title='Signup Failed', message='This email is already registered' )
 
         user = {
@@ -155,7 +155,7 @@ def signup():
             'date'   : datetime.datetime.utcnow(),
         }
 
-        _id = db['teleport.user'].insert(user)
+        _id = db['user'].insert(user)
 
         _session = session_store.new()
         _session['uid'] = str(_id)
@@ -180,7 +180,7 @@ def challenge():
         if not _id or not validate_email(_id):
             abort(400)
 
-        user = db['teleport.user'].find_one({ 'email': _id })
+        user = db['user'].find_one({ 'email': _id })
 
         if not user:
             _salt = ''
@@ -203,7 +203,7 @@ def api_ping():
         _ip = request.query.get('ip', type=str) or request.remote_addr
         _message = request.query.get('message', type=str, default='')
 
-        gate = db['teleport.gate'].find_one({ 'token': _token })
+        gate = db['gate'].find_one({ 'token': _token })
 
         if not gate:
             abort(400)
@@ -216,7 +216,7 @@ def api_ping():
                 'date'   : datetime.datetime.utcnow()
             })
 
-        _id = db['teleport.gate'].save(gate, safe=True)
+        _id = db['gate'].save(gate, safe=True)
 
         response.content_type = 'application/json'
         response.set_header('Cache-Control', 'no-cache')
@@ -259,15 +259,15 @@ def api_fetch():
             abort(400)
         # }
 
-        user = db['teleport.user'].find_one(ObjectId(session['uid']))
+        user = db['user'].find_one(ObjectId(session['uid']))
 
         _id = request.query.get('id')
 
         if _id:
-            gate = db['teleport.gate'].find_one({ '_id': ObjectId(_id), 'user': user['_id'] })
+            gate = db['gate'].find_one({ '_id': ObjectId(_id), 'user': user['_id'] })
             res = _gate_parser(gate)
         else:
-            cursor = db['teleport.gate'].find({ 'user': user['_id'] },
+            cursor = db['gate'].find({ 'user': user['_id'] },
                     sort = [ ('date', pymongo.DESCENDING), ],
                 )
             res = [ _gate_parser(doc) for doc in cursor ]
@@ -300,7 +300,7 @@ def api_add():
             abort(400)
         # }
 
-        user = db['teleport.user'].find_one(ObjectId(session['uid']))
+        user = db['user'].find_one(ObjectId(session['uid']))
 
         _label = request.forms['label']
 
@@ -315,10 +315,10 @@ def api_add():
                 'date': datetime.datetime.now(),
             }
 
-        _id = db['teleport.gate'].insert(gate)
+        _id = db['gate'].insert(gate)
 
         # Reload
-        gate = db['teleport.gate'].find_one(ObjectId(_id))
+        gate = db['gate'].find_one(ObjectId(_id))
 
         response.content_type = 'application/json'
         response.set_header('Cache-Control', 'no-cache')
@@ -342,18 +342,18 @@ def api_update():
             abort(400)
         # }
 
-        user = db['teleport.user'].find_one(ObjectId(session['uid']))
+        user = db['user'].find_one(ObjectId(session['uid']))
 
         _id = request.forms['id']
         _label = request.forms['label']
 
-        gate = db['teleport.gate'].find_one({ '_id': ObjectId(_id), 'user': user['_id'] })
+        gate = db['gate'].find_one({ '_id': ObjectId(_id), 'user': user['_id'] })
 
         gate['label'] = _label[:LABEL_MAX]
-        db['teleport.gate'].save(gate, safe=True)
+        db['gate'].save(gate, safe=True)
 
         # Reload
-        gate = db['teleport.gate'].find_one(ObjectId(_id))
+        gate = db['gate'].find_one(ObjectId(_id))
 
         response.content_type = 'application/json'
         response.set_header('Cache-Control', 'no-cache')
@@ -379,17 +379,17 @@ def api_reset():
             abort(400)
         # }
 
-        user = db['teleport.user'].find_one(ObjectId(session['uid']))
+        user = db['user'].find_one(ObjectId(session['uid']))
 
         _id = request.forms['id']
 
-        gate = db['teleport.gate'].find_one({ '_id': ObjectId(_id), 'user': user['_id'] })
+        gate = db['gate'].find_one({ '_id': ObjectId(_id), 'user': user['_id'] })
 
         gate['token'] =  _random_token()
-        db['teleport.gate'].save(gate, safe=True)
+        db['gate'].save(gate, safe=True)
 
         # Reload
-        gate = db['teleport.gate'].find_one(ObjectId(_id))
+        gate = db['gate'].find_one(ObjectId(_id))
 
         response.content_type = 'application/json'
         response.set_header('Cache-Control', 'no-cache')
@@ -415,11 +415,11 @@ def api_delete():
             abort(400)
         # }
 
-        user = db['teleport.user'].find_one(ObjectId(session['uid']))
+        user = db['user'].find_one(ObjectId(session['uid']))
 
         _id = request.forms['id']
 
-        err = db['teleport.gate'].remove({ '_id': ObjectId(_id), 'user': user['_id'] }, safe=True)
+        err = db['gate'].remove({ '_id': ObjectId(_id), 'user': user['_id'] }, safe=True)
 
         response.content_type = 'application/json'
         response.set_header('Cache-Control', 'no-cache')
