@@ -1,6 +1,8 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-08 05:24
+# Last Change: 2012-11-09 10:45
+
+import datetime
 
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
@@ -24,6 +26,7 @@ class MongoSessionStore(SessionStore):
     def save(self, session):
         _data = dict(session)
         _data['sid'] = session.sid
+        _data['date'] = datetime.datetime.utcnow()
 
         _id = self.collection.insert(_data)
 
