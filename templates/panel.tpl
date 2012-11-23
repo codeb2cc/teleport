@@ -3,12 +3,6 @@
   <head>
     <title>Teleport - codeb2cc.com</title>
 %include common/stylesheet.tpl debug=debug
-%include common/script.tpl debug=debug
-%if debug:
-    <script type="text/javascript" src="/assets/js/panel-debug.js"></script>
-%else:
-    <script type="text/javascript" src="/assets/js/panel.js"></script>
-%end
   </head>
   <body>
 %include common/header.tpl
@@ -124,5 +118,12 @@
       </div>
     </div>
 %include common/footer.tpl
+
+%include common/script.tpl debug=debug
+%if debug:
+    <script type="text/javascript" src="/assets/js/panel-debug.js"></script>
+%else:
+    <script type="text/javascript" src="/assets/js/panel.js"></script>
+%end
   </body>
 </html>

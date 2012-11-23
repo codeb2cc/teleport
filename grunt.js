@@ -1,4 +1,6 @@
 module.exports = function (grunt) {
+  grunt.loadNpmTasks('grunt-css')
+
   grunt.initConfig({
     meta: {
       banner: '/*! <%= grunt.template.today("yyyy-mm-dd HH:MM") %>\n' +
@@ -24,8 +26,14 @@ module.exports = function (grunt) {
         src: ['<banner>', 'assets/js/panel-debug.js'],
         dest: 'assets/js/panel.js'
       }
+    },
+    cssmin: {
+      app: {
+        src: ['<banner>', 'assets/css/app.css'],
+        dest: 'assets/css/app.min.css'
+      }
     }
   })
 
-  grunt.registerTask('default', 'concat min')
+  grunt.registerTask('default', 'concat min cssmin')
 }
