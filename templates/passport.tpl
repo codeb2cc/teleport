@@ -22,9 +22,9 @@
 
 %include common/script.tpl debug=debug
 %if debug:
-    <script type="text/javascript" src="/assets/js/auth-debug.js"></script>
+    <script src="/assets/js/auth-debug.js"></script>
 %else:
-    <script type="text/javascript" src="/assets/js/auth.js"></script>
+    <script src="/assets/js/auth.js"></script>
 %end
   </body>
 </html>

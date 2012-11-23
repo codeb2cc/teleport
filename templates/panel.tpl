@@ -121,9 +121,9 @@
 
 %include common/script.tpl debug=debug
 %if debug:
-    <script type="text/javascript" src="/assets/js/panel-debug.js"></script>
+    <script src="/assets/js/panel-debug.js"></script>
 %else:
-    <script type="text/javascript" src="/assets/js/panel.js"></script>
+    <script src="/assets/js/panel.js"></script>
 %end
   </body>
 </html>

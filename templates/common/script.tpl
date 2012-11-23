@@ -1,12 +1,12 @@
 %if debug:
-  <script type="text/javascript" src="/assets/js/lib/jquery/jquery-debug.js"></script>
-  <script type="text/javascript" src="/assets/js/lib/bootstrap/bootstrap-debug.js"></script>
-  <script type="text/javascript" src="/assets/js/lib/knockout/knockout-debug.js"></script>
+  <script src="/assets/js/lib/jquery/jquery-debug.js"></script>
+  <script src="/assets/js/lib/bootstrap/bootstrap-debug.js"></script>
+  <script src="/assets/js/lib/knockout/knockout-debug.js"></script>
 %else:
-  <script type="text/javascript" src="/assets/js/lib/jquery/jquery.js"></script>
-  <script type="text/javascript" src="/assets/js/lib/bootstrap/bootstrap.js"></script>
-  <script type="text/javascript" src="/assets/js/lib/knockout/knockout.js"></script>
-  <script type="text/javascript">
+  <script src="/assets/js/lib/jquery/jquery.js"></script>
+  <script src="/assets/js/lib/bootstrap/bootstrap.js"></script>
+  <script src="/assets/js/lib/knockout/knockout.js"></script>
+  <script>
 
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-36025716-1']);
