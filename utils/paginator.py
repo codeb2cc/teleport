@@ -1,7 +1,5 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-10-29 22:49
-
 import math
 import pymongo
 

@@ -1,7 +1,5 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-23 08:04
-
 DEBUG = False
 
 DB = {

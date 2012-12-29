@@ -1,7 +1,5 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-12-29 20:55
-
 import json, datetime
 import random
 import sha

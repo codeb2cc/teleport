@@ -1,7 +1,5 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-08 01:42
-
 import re
 
 # Email validator from Django

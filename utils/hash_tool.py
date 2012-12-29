@@ -1,7 +1,5 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-10-29 22:49
-
 import hashlib
 
 def str2md5(io, hexadecimal=True):
