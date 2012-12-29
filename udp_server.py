@@ -5,6 +5,7 @@ import traceback
 from gevent.server import DatagramServer
 
 from teleport.db import db
+from teleport.conf import MESSAGE_MAX
 
 
 class PingServer(DatagramServer):
@@ -20,6 +21,7 @@ class PingServer(DatagramServer):
 
             if not gate:
                 self.socket.sendto('Error', address)
+                return False
 
             gate['counter'] += 1
             len(gate['records']) >= 5 and gate['records'].pop()
