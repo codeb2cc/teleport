@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-09 11:49
+# Last Change: 2012-12-29 20:55
 
 import json, datetime
 import random
@@ -20,15 +20,15 @@ from bottle import HTTPError, HTTPResponse
 from werkzeug.security import safe_str_cmp, safe_join
 from werkzeug.security import gen_salt, generate_password_hash, check_password_hash
 
-from .db import db
-from .conf import DEBUG
-from .conf import LABEL_MAX, MESSAGE_MAX
-from .conf import HMAC_METHOD, HMAC_SALT_LEN, HMAC_PASSWORD_LEN
-from .conf import SESSION_COLLECTION
-from .utils.session import MongoSessionStore
-from .utils.paginator import Paginator
-from .utils.hash_tool import str2md5
-from .utils.validator import validate_email
+from teleport.db import db
+from teleport.conf import DEBUG
+from teleport.conf import LABEL_MAX, MESSAGE_MAX
+from teleport.conf import HMAC_METHOD, HMAC_SALT_LEN, HMAC_PASSWORD_LEN
+from teleport.conf import SESSION_COLLECTION
+from teleport.utils.session import MongoSessionStore
+from teleport.utils.paginator import Paginator
+from teleport.utils.hash_tool import str2md5
+from teleport.utils.validator import validate_email
 
 session_store = MongoSessionStore(collection=SESSION_COLLECTION)
 

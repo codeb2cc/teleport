@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-09 10:45
+# Last Change: 2012-12-29 20:56
 
 import datetime
 
@@ -9,7 +9,7 @@ from bson.errors import InvalidId
 
 from werkzeug.contrib.sessions import SessionStore
 
-from ..db import db
+from teleport.db import db
 
 class MongoSessionStore(SessionStore):
     def __init__(self, session_class=None, collection=None):

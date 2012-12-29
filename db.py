@@ -1,11 +1,11 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-08 06:56
+# Last Change: 2012-12-29 20:54
 
 from pymongo import Connection
 from pymongo.errors import AutoReconnect
 
-from .conf import DB
+from teleport.conf import DB
 
 try:
     conn = Connection(

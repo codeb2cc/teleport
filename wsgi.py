@@ -1,12 +1,12 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-10-29 21:49
+# Last Change: 2012-12-29 20:56
 
 import os
 import bottle
 
-from .conf import TEMPLATE_PATH
-from .views import *
+from teleport.conf import TEMPLATE_PATH
+from teleport.views import *
 
 bottle.TEMPLATE_PATH = []
 for path in TEMPLATE_PATH:

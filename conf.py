@@ -1,8 +1,8 @@
 # -*- coding:utf-8 -*-
 
-# Last Change: 2012-11-09 11:47
+# Last Change: 2012-11-23 08:04
 
-DEBUG = True
+DEBUG = False
 
 DB = {
         'HOST': '127.0.0.1',
