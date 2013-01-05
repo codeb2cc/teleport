@@ -200,6 +200,8 @@ def api_ping():
         _token = request.query.get('token', type=str)
         _ip = request.query.get('ip', type=str) or request.remote_addr
         _message = request.query.get('message', type=str, default='')
+        _lng = request.query.get('lng', type=float, default=0.0)
+        _lat = request.query.get('lat', type=float, default=0.0)
 
         gate = db['gate'].find_one({ 'token': _token })
 
@@ -210,6 +212,8 @@ def api_ping():
         len(gate['records']) >= 5 and gate['records'].pop()
         gate['records'].insert(0, {
                 'ip'     : _ip,
+                'lng'    : _lng,
+                'lat'    : _lat,
                 'message': _message[:MESSAGE_MAX],
                 'date'   : datetime.datetime.utcnow()
             })

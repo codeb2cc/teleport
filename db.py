@@ -31,7 +31,7 @@ except Exception as e:
         # 'description': '',
         # 'token': '',
         # 'records': [
-                # { 'ip': '', 'message': '', date': '' }
+                # { 'ip': '', 'lng': 0, 'lat': 0, 'message': '', date': '' }
             # ],
         # 'counter': 0,
         # 'user': '',

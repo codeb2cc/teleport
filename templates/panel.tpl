@@ -18,7 +18,7 @@
         </div>
         <div class="span8">
           <div>
-            <p>Usage: <code>% curl teleport.codeb2cc.com/ping/?token=TOKEN [ &ip=IP ] [ &message=MESSAGE ]</code></p>
+            <p>Usage: <code>% curl /ping/?token=TOKEN [ &ip=IP ] [ &lng=LNG&lat=LAT ] [ &message=MESSAGE ]</code></p>
           </div>
           <div>
             <div class="clearfix ib-wrap gate-control">
@@ -62,8 +62,14 @@
                   <div class="reader" data-bind="text: counter"></div>
                 </div>
                 <div class="ib gate-ip" title="IP">
-                  <span class="icon"><i class="icon-globe"></i></span>
+                  <span class="icon"><i class="icon-eye-open"></i></span>
                   <div class="reader" data-bind="text: ip"></div>
+                </div>
+              </div>
+              <div class="clearfix ib-wrap">
+                <div class="ib gate-location" title="Location">
+                  <span class="icon"><i class="icon-map-marker"></i></span>
+                  <div class="reader" data-bind="text: location"></div>
                 </div>
               </div>
               <div class="clearfix ib-wrap">
@@ -74,7 +80,7 @@
               </div>
               <div class="gate-action">
                 <div class="btn-group">
-                  <button type="button" class="btn" title="Map" data-bind="click: $parent.map, enable: ip"><i class="icon-map-marker"></i></button>
+                  <button type="button" class="btn" title="Map" data-bind="click: $parent.map, enable: ip"><i class="icon-globe"></i></button>
                   <button type="button" class="btn" title="History" data-bind="click: $parent.history, enable: ip"><i class="icon-book"></i></button>
                   <button type="button" class="btn" title="Reset Token" data-bind="click: $parent.reset"><i class="icon-repeat"></i></button>
                   <button type="button" class="btn" title="Delete Gate" data-bind="click: $parent.remove"><i class="icon-trash"></i></button>
@@ -106,6 +112,8 @@
             <tr>
               <th width="12">#</th>
               <th width="120">IP</th>
+              <th width="20">LNG</th>
+              <th width="20">LAT</th>
               <th>Message</th>
               <th width="160">Date</th>
             </tr>
@@ -114,6 +122,8 @@
             <tr>
               <td data-bind="text: $index"></td>
               <td data-bind="text: ip"></td>
+              <td data-bind="text: lng"></td>
+              <td data-bind="text: lat"></td>
               <td data-bind="text: message"></td>
               <td>
                 <div data-bind="text: date.toLocaleTimeString()"></div>

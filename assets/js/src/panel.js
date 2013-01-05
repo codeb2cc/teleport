@@ -20,6 +20,18 @@
         return this.records().length ? this.records()[0]['ip'] : ''
       }, this)
 
+      this.lng = ko.computed(function () {
+        return this.records().length ? this.records()[0]['lng'] : '0'
+      }, this)
+
+      this.lat = ko.computed(function () {
+        return this.records().length ? this.records()[0]['lat'] : '0'
+      }, this)
+
+      this.location = ko.computed(function () {
+          return this.lng() + ', ' + this.lat()
+      }, this)
+
       this.message = ko.computed(function () {
         return this.records().length ? this.records()[0]['message'] : ''
       }, this)
@@ -125,7 +137,7 @@
         if (!that.bmap) {
           that.bmap = new BMap.Map('map-container')
         }
-        that.bpoint = new BMap.Point(116.404, 39.915)
+        that.bpoint = new BMap.Point(this.lng(), this.lat())
         that.bmarker = new BMap.Marker(that.bpoint)
 
         $('#modal-map').modal('show')
