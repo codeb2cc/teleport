@@ -58,7 +58,7 @@
               </div>
               <div class="clearfix ib-wrap">
                 <div class="ib gate-counter" title="Ping Counter">
-                  <span class="icon"><i class="icon-map-marker"></i></span>
+                  <span class="icon"><i class="icon-list"></i></span>
                   <div class="reader" data-bind="text: counter"></div>
                 </div>
                 <div class="ib gate-ip" title="IP">
@@ -74,6 +74,7 @@
               </div>
               <div class="gate-action">
                 <div class="btn-group">
+                  <button type="button" class="btn" title="Map" data-bind="click: $parent.map, enable: ip"><i class="icon-map-marker"></i></button>
                   <button type="button" class="btn" title="History" data-bind="click: $parent.history, enable: ip"><i class="icon-book"></i></button>
                   <button type="button" class="btn" title="Reset Token" data-bind="click: $parent.reset"><i class="icon-repeat"></i></button>
                   <button type="button" class="btn" title="Delete Gate" data-bind="click: $parent.remove"><i class="icon-trash"></i></button>
@@ -83,6 +84,15 @@
             <!-- /ko -->
           </div>
         </div>
+      </div>
+    </div>
+    <div class="modal hide fade" id="modal-map">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3>Location</h3>
+      </div>
+      <div class="modal-body">
+        <div id="map-container"></div>
       </div>
     </div>
     <div class="modal hide fade" id="modal-history">

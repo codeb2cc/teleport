@@ -59,6 +59,10 @@
       this.gates = ko.observableArray([])
       this.activeGate = ko.observable()
 
+      this.bmap = null
+      this.bpoint = null
+      this.bmarker = null
+
       // Topbar {
       this.add = function (v, e) {
         if (e.type === 'keypress' && e.keyCode !== 13) {
@@ -117,6 +121,22 @@
         })
       }
 
+      this.map = function (gate) {
+        if (!that.bmap) {
+          that.bmap = new BMap.Map('map-container')
+        }
+        that.bpoint = new BMap.Point(116.404, 39.915)
+        that.bmarker = new BMap.Marker(that.bpoint)
+
+        $('#modal-map').modal('show')
+      }
+
+      $('#modal-map').on('shown', function () {
+        that.bmap.clearOverlays()
+        that.bmap.centerAndZoom(that.bpoint, 15)
+        that.bmap.addOverlay(that.bmarker)
+      })
+
       this.history = function (gate) {
         that.activeGate(null).activeGate(gate)
         $('#modal-history').modal('show')
@@ -161,7 +181,7 @@
 
     }
 
-    var APP = new TeleportViewModel()
+    window.APP = new TeleportViewModel()
     ko.applyBindings(APP)
   })
 })()

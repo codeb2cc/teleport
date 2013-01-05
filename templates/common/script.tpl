@@ -2,10 +2,12 @@
   <script src="/assets/js/lib/jquery/jquery-debug.js"></script>
   <script src="/assets/js/lib/bootstrap/bootstrap-debug.js"></script>
   <script src="/assets/js/lib/knockout/knockout-debug.js"></script>
+  <script src="http://api.map.baidu.com/api?v=1.4"></script>
 %else:
   <script src="/assets/js/lib/jquery/jquery.js"></script>
   <script src="/assets/js/lib/bootstrap/bootstrap.js"></script>
   <script src="/assets/js/lib/knockout/knockout.js"></script>
+  <script src="http://api.map.baidu.com/api?v=1.4"></script>
   <script>
 
     var _gaq = _gaq || [];
