@@ -16,7 +16,9 @@ class PingServer(DatagramServer):
 
             _token = _raw[0]
             _ip = address[0]
-            _message = _raw[1]
+            _lng = raw[1]
+            _lat = raw[2]
+            _message = _raw[3]
 
             gate = db['gate'].find_one({ 'token': _token })
 
@@ -28,6 +30,8 @@ class PingServer(DatagramServer):
             len(gate['records']) >= 5 and gate['records'].pop()
             gate['records'].insert(0, {
                     'ip'     : _ip,
+                    'lng'    : _lng,
+                    'lat'    : _lat,
                     'message': _message[:MESSAGE_MAX],
                     'date'   : datetime.datetime.utcnow()
                 })
