@@ -17,8 +17,8 @@ class PingServer(DatagramServer):
 
             _token = _raw[0]
             _ip = address[0]
-            _lng = float(raw[1])
-            _lat = float(raw[2])
+            _lng = float(_raw[1])
+            _lat = float(_raw[2])
             _message = _raw[3]
 
             gate = db['gate'].find_one({ 'token': _token })
