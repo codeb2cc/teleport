@@ -7,6 +7,7 @@ from gevent.server import DatagramServer
 
 from teleport.db import db
 from teleport.conf import MESSAGE_MAX
+from teleport.utils.logger import logger
 
 
 class PingServer(DatagramServer):

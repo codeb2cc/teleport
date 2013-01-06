@@ -306,8 +306,6 @@ def api_add():
 
         _label = request.forms['label']
 
-        print user
-
         gate = {
                 'label': _label[:LABEL_MAX],
                 'token': _random_token(),
