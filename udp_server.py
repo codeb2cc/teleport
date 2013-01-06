@@ -13,7 +13,9 @@ from teleport.utils.logger import logger
 class PingServer(DatagramServer):
     def handle(self, data, address):
         try:
-            _raw = data.split('\t')
+            _raw = data.split(',')
+
+            logger.warning('UDP Message: %s' % data)
 
             _token = _raw[0]
             _ip = address[0]
